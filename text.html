@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>adsf</title>
+</head>
+<body>
+	<form id="zipcode" class="writer-search-form">
+      <div class="input-group">
+        <input onblur="this.value=removeSpaces(this.value);" class="zipc" type="text" placeholder="Enter Zip Code">
+        <input type="submit" value="Search Writers">
+      </div>
+    </form>
+</body>
+</html>
+
+
+<!-- 
+$(document).ready(function(){
+    $( "#zipcode" ).submit(function( event ) {
+      event.preventDefault();
+      var zipval = $('.zipc').val();
+      urlred = 'https://info.storyterrace.com/us/writer-search/results';
+      window.location = urlred+'/?zip='+zipval;
+    });
+});
+
+$(document).ready(function(){
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+ }
+  var zip = getParameterByName('zip');
+  $('.showzip').text(zip);
+}); -->
+
+/* ========= hubspot related posts =========*/
+<div class="case-studies-section related-posts-section">
+  <div class="page-center">
+      <h2>Related Articles</h2>    
+    <div class="case-studies-posts">
+      <ul>
+      {% set max_posts = 3 %}<!-- Set the max number of recent posts to be output to the page here -->
+	    {% set rec_posts = [] %}
+	    {% set rec_posts = rec_posts + blog_recent_posts('group.id', max_posts + 1) %}
+	    {% set i = 0 %}
+      {% for post in rec_posts %}
+        {% if content.absolute_url != post.absolute_url and i < max_posts %}
+        <li>
+          {% if not simple_list_page %}
+            <div class="post-thumb">
+              {% if post.featured_image %}
+              <a href="{{post.absolute_url}}" title="" class="hs-featured-image-link">
+                <img src="{{ post.featured_image }}" alt="{{ post.featured_image_alt_text | escape }}">
+              </a>
+              {% endif %}
+            </div>
+            <div class="post-content">
+              <p>{{ post.post_list_content|safe|truncate(150, True, '...') }}</p>
+              <div class="read-more">
+                <a href="{{ post.absolute_url }}">Read the case study</a>
+              </div>
+            </div>
+          {% endif %}
+        </li>
+      {% set i = i + 1 %}          
+        {% endif %}
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+/* ========= blog listing breakdown and add extra content ========== */
+<div class="blog-categories-header">
+  <div class="page-center">  
+    <p id="hubspot-topic_data"> <strong>Categories:</strong>
+   {# {% for content in contents %}
+   {% if content.topic_list %}
+   #}
+    {# {% set my_topics = blog_topics('default', 4) %}
+    {% if my_topics %}
+      <a class="topic-link" href="#">All</a> 
+      {% for topic in my_topics %}
+      <a class="topic-link" href="{{ blog_tag_url(group.id, topic.slug) }}">{{ topic.name }}</a>
+      {% endfor %}
+    {% endif %} #}
+   {# {% endfor %} #}
+      </p>
+    
+      <ul class="blog-header__meta--items">
+        <li class="blog-header__meta--industries dropdown-menu">
+          <span class="dropdown-menu__label">Industries</span>
+          <ul class="dropdown-menu__list">
+            <li class="topics-all"><a href="{{ group.absolute_url }}">All Industries</a></li>
+            <li class="topics-k-12-education"><a href="{{ group.absolute_url }}/topic/k-12-education">K-12 Education</a></li>
+            <li class="topics-higher-education"><a href="{{ group.absolute_url }}/topic/higher-education">Higher Education</a></li>
+            <li class="topics-healthcare"><a href="{{ group.absolute_url }}/topic/healthcare">Healthcare</a></li>
+            <li class="topics-retail"><a href="{{ group.absolute_url }}/topic/retail">Retail</a></li>
+            <li class="topics-industrial"><a href="{{ group.absolute_url }}/topic/industrial">Industrial</a></li>
+            <li class="topics-hospitality"><a href="{{ group.absolute_url }}/topic/hospitality">Hospitality</a></li>
+          </ul>
+        </li>  
+        <li class="blog-header__meta--topics dropdown-menu">
+            <span class="dropdown-menu__label">Categories</span>
+            <ul class="dropdown-menu__list">
+                {#<li class="topics-all"><a href="{{ group.absolute_url }}">All Topics</a></li>#}
+                <li class="topics-services"><a href="{{ group.absolute_url }}/topic/managed-wifi">Managed WiFi</a></li>
+                <li class="topics-design"><a href="{{ group.absolute_url }}/topic/performance">Performance</a></li>
+                <li class="topics-strategy"><a href="{{ group.absolute_url }}/topic/design">Design</a></li>
+                <li class="topics-strategy"><a href="{{ group.absolute_url }}/topic/security">Security</a></li>
+                <li class="topics-strategy"><a href="{{ group.absolute_url }}/topic/strategy">Strategy</a></li>
+            </ul>
+          </li>
+        </ul>
+    </div>
+</div>
+<div class="blog-posts-wrapper">
+  <div class="page-center">
+    <ul class="post-listings">
+      {% for content in contents %}
+      {% if loop.index == 1 %}
+     <li>
+        <div class="post-thumbnail">
+          {% if content.post_list_summary_featured_image %}
+          <div class="hs-featured-image-wrapper">
+            <a href="{{content.absolute_url}}" title="" class="hs-featured-image-link">
+              <img src="{{ content.post_list_summary_featured_image }}" alt="{{ content.featured_image_alt_text | escape }}">
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div class="post-content-area">
+          <div class="content-header">
+            <div class="post-tags">
+                {% if content.topic_list %}
+                    {% for topic in content.topic_list %}
+                    <a class="topic-link" href="{{ blog_tag_url(group.id, topic.slug) }}">{{ topic.name }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <h2><a href="{{content.absolute_url}}">{{ content.name }}</a></h2>
+          </div>
+          <div class="post-publish-date">
+            {%if content.updated %}
+              {{ content.updated|datetimeformat('%B %e, %Y') }} 
+            {% endif %}
+          </div>
+        </div>
+      </li>
+      <li></li>
+      {% elif  loop.index == 5 %}
+       <li><a class="twitter-timeline" data-height="400" data-theme="light" href="https://twitter.com/SecurEdgeWiFi?ref_src=twsrc%5Etfw">Tweets by SecurEdgeWiFi</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></li>
+       <li>
+        <div class="post-thumbnail">
+          {% if content.post_list_summary_featured_image %}
+          <div class="hs-featured-image-wrapper">
+            <a href="{{content.absolute_url}}" title="" class="hs-featured-image-link">
+              <img src="{{ content.post_list_summary_featured_image }}" alt="{{ content.featured_image_alt_text | escape }}">
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div class="post-content-area">
+          <div class="content-header">
+            <div class="post-tags">
+                {% if content.topic_list %}
+                    {% for topic in content.topic_list %}
+                    <a class="topic-link" href="{{ blog_tag_url(group.id, topic.slug) }}">{{ topic.name }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <h2><a href="{{content.absolute_url}}">{{ content.name }}</a></h2>
+          </div>
+          <div class="post-publish-date">
+            {%if content.updated %}
+              {{ content.updated|datetimeformat('%B %e, %Y') }} 
+            {% endif %}
+          </div>
+        </div>
+      </li>
+      
+      {% else %}
+      <li>
+        <div class="post-thumbnail">
+          {% if content.post_list_summary_featured_image %}
+          <div class="hs-featured-image-wrapper">
+            <a href="{{content.absolute_url}}" title="" class="hs-featured-image-link">
+              <img src="{{ content.post_list_summary_featured_image }}" alt="{{ content.featured_image_alt_text | escape }}">
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        <div class="post-content-area">
+          <div class="content-header">
+            <div class="post-tags">
+                {% if content.topic_list %}
+                    {% for topic in content.topic_list %}
+                    <a class="topic-link" href="{{ blog_tag_url(group.id, topic.slug) }}">{{ topic.name }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <h2><a href="{{content.absolute_url}}">{{ content.name }}</a></h2>
+          </div>
+          <div class="post-publish-date">
+            {%if content.updated %}
+              {{ content.updated|datetimeformat('%B %e, %Y') }} 
+            {% endif %}
+          </div>
+        </div>
+      </li>
+      {% endif %}
+      {% endfor %}
+      
+      <li>
+        <div class="most-popular">
+          <h3>Most Popular</h3>
+          {% set posts = blog_recent_posts('default', 4) %}
+          <ul>
+            {% for post in posts %}
+             <li>
+              <div class="pop-post-meta">
+                <div class="pop-post-tag">
+                 {% for topic in post.topic_list %}
+                    <a class="topic-link" href="{{ blog_tag_url(group.id, topic.slug) }}">{{ topic.name }}</a>{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                </div>
+                <div class="pop-post-publishdt">
+                  {%if post.updated %}
+              {{ post.updated|datetimeformat('%B %e, %Y') }} 
+            {% endif %}
+                </div>
+              </div>
+              <div class="pop-post-title">
+               <a href="{{ post.absolute_url }}">{{ post.name }}</a>
+              </div>
+            </li>
+                
+            {% endfor %}
+<!--             <li>
+              <div class="pop-post-meta">
+                <div class="pop-post-tag">
+                  Mobility
+                </div>
+                <div class="pop-post-publishdt">
+                  August 13, 2019
+                </div>
+              </div>
+              <div class="pop-post-title">
+                What Should be Included in a Wireless Network Design for Businesses?
+              </div>
+            </li> -->
+<!--             <li>
+              <div class="pop-post-meta">
+                <div class="pop-post-tag">
+                  Mobility
+                </div>
+                <div class="pop-post-publishdt">
+                  August 13, 2019
+                </div>
+              </div>
+              <div class="pop-post-title">
+                What Should be Included in a Wireless Network Design for Businesses?
+              </div>
+            </li>
+             <li>
+              <div class="pop-post-meta">
+                <div class="pop-post-tag">
+                  Mobility
+                </div>
+                <div class="pop-post-publishdt">
+                  August 13, 2019
+                </div>
+              </div>
+              <div class="pop-post-title">
+                What Should be Included in a Wireless Network Design for Businesses?
+              </div>
+            </li>
+             <li>
+              <div class="pop-post-meta">
+                <div class="pop-post-tag">
+                  Mobility
+                </div>
+                <div class="pop-post-publishdt">
+                  August 13, 2019
+                </div>
+              </div>
+              <div class="pop-post-title">
+                What Should be Included in a Wireless Network Design for Businesses?
+              </div>
+            </li> -->
+          </ul>
+        </div>
+      </li>
+       </ul>
+    
+    
+    
+    {% if not simple_list_page %}
+    <!-- Numbered Pagination -->
+    <div class="blog-pagination">
+        {% set page_list = [-2, -1, 0, 1, 2] %}
+        {% if contents.total_page_count - current_page_num == 1 %}{% set offset = -1 %}
+        {% elif contents.total_page_count - current_page_num == 0 %}{% set offset = -2 %}
+        {% elif current_page_num == 2 %}{% set offset = 1 %}
+        {% elif current_page_num == 1 %}{% set offset = 2 %}
+        {% else %}{% set offset = 0 %}{% endif %}
+
+        <div class="blog-pagination-left">
+            {% if last_page_num %}<a class="prev-link" href="{{ blog_page_link(last_page_num) }}">Previous</a>{% endif %}
+            {% if contents.total_page_count > 5 %}
+                {% if current_page_num >= 4 %}
+                    <a href="{{ blog_page_link(1) }}">1</a>
+                    <a class="elipses" href="{% if current_page_num <= 5 %}{{ blog_page_link(1) }}{% else %}{{ blog_page_link(current_page_num - 5) }}{% endif %}">...</a>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="blog-pagination-center">
+            {% for page in page_list %}
+                {% set this_page = current_page_num + page + offset %}
+                {% if this_page > 0 and this_page <= contents.total_page_count %}
+                    <a {% if this_page == current_page_num %}class="active"{% endif %} href="{{ blog_page_link(this_page) }}">{{ this_page }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="blog-pagination-right">
+            {% if contents.total_page_count > 5 %}
+                {% if contents.total_page_count - current_page_num > 2 %}
+                    <a class="elipses" href="{% if contents.total_page_count - current_page_num <= 5 %}{{ contents.total_page_count }}{% else %}{{ blog_page_link(current_page_num + 5) }}{% endif %}">...</a>
+                    <a href="{{ blog_page_link(contents.total_page_count) }}">{{ contents.total_page_count }}</a>
+                {% endif %}
+            {% endif %}
+            {% if next_page_num %}<a class="next-link" href="{{ blog_page_link(current_page_num + 1) }}">Next</a>{% endif %}
+        </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+
